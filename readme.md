@@ -8,3 +8,4 @@ it also contains some odd ones
 2. Guess-the-number
 3. 
 4. Dice rolling simulator
+5. Hangman
