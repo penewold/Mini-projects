@@ -33,7 +33,8 @@ parse_model("fish.obj")
 print(vertices)
 
 pg.init()
-screen = pg.display.set_mode((1280, 720))
+screen = pg.display.set_mode((1280, 720), pg.RESIZABLE)
+width, height = pg.display.get_window_size()
 clock = pg.time.Clock()
 running = True
 
@@ -50,7 +51,7 @@ while running:
     for vertex in vertices:
         #print(vertices)
         #print(vertex)
-        pg.draw.circle(screen, (255, 255, 255), ((vertex[0]) * 400 + 200, 720 - ((vertex[1]) * 400 + 200)), 3)
+        pg.draw.circle(screen, (255, 255, 255), ((vertex[0]) * 400 + 200, height - ((vertex[1]) * 400 + 200)), 3)
 
     # flip() the display to put your work on screen
     pg.display.flip()
