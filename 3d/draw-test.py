@@ -33,12 +33,15 @@ parse_model("fish.obj")
 print(vertices)
 
 pg.init()
+font = pg.font.SysFont(None, 36)
+text = font.render('hello', True, (255, 255, 0))
 screen = pg.display.set_mode((1280, 720), pg.RESIZABLE)
-width, height = pg.display.get_window_size()
+width, height = [1280, 720]
 clock = pg.time.Clock()
 running = True
 
 while running:
+    width, height = pg.display.get_window_size()
     # poll for events
     # pg.QUIT event means the user clicked X to close your window
     for event in pg.event.get():
@@ -53,6 +56,9 @@ while running:
         #print(vertex)
         pg.draw.circle(screen, (255, 255, 255), ((vertex[0]) * 400 + 200, height - ((vertex[1]) * 400 + 200)), 3)
 
+    fps = font.render(str(round(clock.get_fps())), True, (255, 255, 0))
+    
+    screen.blit(fps, (20, 20))
     # flip() the display to put your work on screen
     pg.display.flip()
 
