@@ -75,6 +75,9 @@ width, height = [1280, 720]
 clock = pg.time.Clock()
 
 
+
+
+
 while running:
     width, height = pg.display.get_window_size()
     # poll for events
@@ -115,7 +118,7 @@ while running:
 
     for vertex in aplied_vertices:
         
-        pg.draw.circle(screen, (255, 255, 255), ((vertex[0]) * model_size + location[0], height - ((vertex[1]) * model_size + location[1])), 1)
+        pg.draw.circle(screen, "white", ((vertex[0]) * model_size + location[0], height - ((vertex[1]) * model_size + location[1])), 1)
 
 
     fps = font.render(str(round(clock.get_fps())), True, (255, 255, 0))
