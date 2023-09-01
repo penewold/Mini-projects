@@ -2,20 +2,51 @@ import pygame as pg
 import numpy as np
 import tkinter as tk
 from tkinter import filedialog
+import math
 
+a1, a2, a3 = 0, 0, 0
+vertices = []
+aplied_vertices = []
+running = True
+model_size = 400
+location = [200, 200]
 
 def handle_vertex_args(args):
     method, x, y, z = args
 
+def sin(angle):
+    ra = math.sin(math.radians(angle))
+    return ra
 
-vertices = []
+def cos(angle):
+    ra = math.cos(math.radians(angle))
+    return ra
+
+
+xrot = np.array([[1, 0, 0],
+        [0, cos(a1), sin(a1) * -1],
+        [0, sin(a1), cos(a1)]])
+
+yrot = np.array([[cos(a2), 0, sin(a2)],
+        [0, 1, 0],
+        [sin(a2) * -1, 0, cos(a2)]])
+
+zrot = np.array([[cos(a3), sin(a3) * -1, 0],
+        [sin(a3), cos(a3), 0],
+        [0, 0, 1]])
+
+def applyRotation(pos):
+    a = np.dot(xrot, pos)
+    a = np.dot(yrot, a)
+    a = np.dot(zrot, a)
+    return a
 
 
 def parse_model(model):
-    #model_arguments = []
+    
     with open(model, "r") as object_file:
         for line in object_file:
-            #model_arguments.append(line.replace("\n", "").split())
+            
             arguments = line.replace("\n", "").split()
             if len(arguments) > 0:
                 if arguments[0] == "v":
@@ -34,7 +65,7 @@ root = tk.Tk()
 root.withdraw()
 file_path = filedialog.askopenfilename()
 parse_model(file_path)
-print(vertices)
+#print(vertices)
 
 pg.init()
 font = pg.font.SysFont(None, 36)
@@ -42,10 +73,7 @@ text = font.render('hello', True, (255, 255, 0))
 screen = pg.display.set_mode((1280, 720), pg.RESIZABLE)
 width, height = [1280, 720]
 clock = pg.time.Clock()
-running = True
-model_size = 400
-dot_size = 3
-location = [200, 200]
+
 
 while running:
     width, height = pg.display.get_window_size()
@@ -59,21 +87,35 @@ while running:
                 model_size += 10
             if event.key == pg.K_DOWN:
                 model_size -= 10
-            if event.key == pg.K_w:
-                dot_size += 1
-            if event.key == pg.K_s:
-                dot_size -= 1
+            
             if event.key == pg.K_d:
                 location[0] += 20
             if event.key == pg.K_a:
+                location[0] -= 20
+            if event.key == pg.K_w:
+                location[1] += 20
+            if event.key == pg.K_s:
                 location[1] -= 20
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("black")
+    xrot = np.array([[1, 0, 0],
+        [0, cos(a1), sin(a1) * -1],
+        [0, sin(a1), cos(a1)]])
+    
+    yrot = np.array([[cos(a2), 0, sin(a2)],
+        [0, 1, 0],
+        [sin(a2) * -1, 0, cos(a2)]])
 
+    zrot = np.array([[cos(a3), sin(a3) * -1, 0],
+        [sin(a3), cos(a3), 0],
+        [0, 0, 1]])
+    
+    screen.fill("black")
     for vertex in vertices:
-        #print(vertices)
-        #print(vertex)
-        pg.draw.circle(screen, (255, 255, 255), ((vertex[0]) * model_size + location[0], height - ((vertex[1]) * model_size + location[1])), dot_size)
+        aplied_vertices.append(applyRotation(vertex))
+
+    for vertex in aplied_vertices:
+        
+        pg.draw.circle(screen, (255, 255, 255), ((vertex[0]) * model_size + location[0], height - ((vertex[1]) * model_size + location[1])), 1)
 
 
     fps = font.render(str(round(clock.get_fps())), True, (255, 255, 0))
@@ -82,7 +124,13 @@ while running:
     # flip() the display to put your work on screen
     pg.display.flip()
 
+    a1 += 1
+    a2 += 1
+    a3 += 1
+    aplied_vertices = []
     clock.tick(60)  # limits FPS to 60
+    
+
 
 pg.quit()
 
