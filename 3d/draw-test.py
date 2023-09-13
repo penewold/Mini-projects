@@ -112,12 +112,12 @@ while running:
         [sin(a3), cos(a3), 0],
         [0, 0, 1]])
     
-    screen.fill("black")
+    
     for vertex in vertices:
         aplied_vertices.append(applyRotation(vertex))
 
+    screen.fill("black")
     for vertex in aplied_vertices:
-        
         pg.draw.circle(screen, "white", ((vertex[0]) * model_size + location[0], height - ((vertex[1]) * model_size + location[1])), 1)
 
 
